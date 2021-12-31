@@ -481,6 +481,7 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:FA.COA.API.Controllers.FACOAController.GetEventsData(FA.COA.API.Models.DataModel.parameterDataModel.eventsQuery)" -->
         <member name="M:FA.COA.API.Controllers.ValuesController.Get">
             <summary>
             get方法
@@ -493,6 +494,21 @@
             </summary>
             <param name="id"></param>
             <returns>string</returns>
+        </member>
+        <member name="T:FA.COA.API.Models.DataModel.EventsDataModel">
+            <summary>
+            Evenets'DTO 只建有用到的欄位
+            </summary>
+        </member>
+        <member name="T:FA.COA.API.Models.DataModel.EventsDataModel.Events">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:FA.COA.API.Models.DataModel.EventsDataModel.Events_CT2MMSI_Zones">
+            <summary>
+            
+            </summary>
         </member>
     </members>
 </doc>
