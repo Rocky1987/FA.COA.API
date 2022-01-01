@@ -6,17 +6,16 @@ using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 using FA.COA.API.Models.DataModel;
-using FA.COA.API.Models.Repository;
 using FA.COA.API.Models.Service;
 using FA.COA.API.Models.ViewModel;
 namespace FA.COA.API.Controllers
 {
     public class FACOAController : ApiController
     {
-        EventsRepository _eventsRepository = null;
+        EventsService _eventsService = null;
         public FACOAController()
         {
-            _eventsRepository = new EventsRepository();
+            this._eventsService = new EventsService();
         }
         // POST api/FACOA
         /// <summary>
@@ -31,21 +30,7 @@ namespace FA.COA.API.Controllers
             APIViewModel<List<EventsViewModel.Events_CT2MMSI_Zones>> resp = new APIViewModel<List<EventsViewModel.Events_CT2MMSI_Zones>>();
             try
             {
-                List<EventsViewModel.Events_CT2MMSI_Zones> viewData = this._eventsRepository.GetEventsData(model).Select(p => new EventsViewModel.Events_CT2MMSI_Zones
-                {
-                    EventID = p.EventID,
-                    TimeStmp = p.TimeStmp,
-                    MMSI = p.MMSI,
-                    ShipName= p.ShipName,
-                    Lng = p.Lng,
-                    Lat = p.Lat,
-                    SOG = p.SOG,
-                    COG = p.COG,
-                    ConditionID1 = p.ConditionID1,
-                    ZoneID = p.ZoneID,
-                    CTNo = p.CTNo,
-                    ZoneName = p.ZoneName
-                }).ToList();
+                List<EventsViewModel.Events_CT2MMSI_Zones> viewData = this._eventsService.GetEventsData(model);
                 resp.Data = viewData;
                 resp.Status = 1;
             }
