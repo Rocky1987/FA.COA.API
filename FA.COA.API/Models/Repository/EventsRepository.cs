@@ -14,8 +14,7 @@ namespace FA.COA.API.Models.Repository
         {
             string sqlQuery = string.Empty, sqlWhere = string.Empty;
             DynamicParameters sqlParam = new DynamicParameters();
-            //sqlParam.Add("ConstLic", constLic);
-
+           
             #region SQL語法
             sqlQuery = @"SELECT  
                               [EventID]
@@ -37,16 +36,33 @@ namespace FA.COA.API.Models.Repository
 
             if (!string.IsNullOrEmpty(model.CTNo))
             {
-                sqlQuery += "  And C2M.CTNo = @CTNo ";
+                if (model.SearchType == 1)
+                {
+                    sqlParam.Add("CTNo", model.CTNo);
+                    sqlQuery += "  And C2M.CTNo = @CTNo ";
+                }
+                else if(model.SearchType == 2)
+                {
+                    sqlParam.Add("CTNo", "%" + model.CTNo + "%");
+                    sqlQuery += "  And C2M.CTNo like @CTNo ";
+                }
+            }
+
+            if (!string.IsNullOrEmpty(model.ZoneName))
+            {
+                sqlParam.Add("ZoneName", model.ZoneName);
+                sqlQuery += "  And Z.ZoneName = @ZoneName ";
             }
 
             if (model.DateS.Year > 1980)
             {
+                sqlParam.Add("DateS", model.DateS);
                 sqlQuery += "  And TimeStmp >= @DateS ";
             }
 
             if (model.DateE.Year > 1980)
             {
+                sqlParam.Add("DateE", model.DateE);
                 sqlQuery += "  And TimeStmp <= @DateE ";
             }
                                   
@@ -56,7 +72,7 @@ namespace FA.COA.API.Models.Repository
             #region SQL 查詢
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["FACOASQLConnection"].ConnectionString))
             {
-                return conn.Query<EventsDataModel.Events_CT2MMSI_Zones>(sqlQuery, model);
+                return conn.Query<EventsDataModel.Events_CT2MMSI_Zones>(sqlQuery, sqlParam);
             }
             #endregion
         }

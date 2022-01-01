@@ -203,6 +203,7 @@
     <Compile Include="Models\DataModel\EventsDataModel.cs" />
     <Compile Include="Models\DataModel\parameterDataModel.cs" />
     <Compile Include="Models\Repository\EventsRepository.cs" />
+    <Compile Include="Models\Service\EventsService.cs" />
     <Compile Include="Models\Service\HelplerService.cs" />
     <Compile Include="Models\ViewModel\EventsViewModel.cs" />
     <Compile Include="Models\ViewModel\APIViewModel.cs" />

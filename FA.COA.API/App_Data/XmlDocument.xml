@@ -510,5 +510,10 @@
             
             </summary>
         </member>
+        <member name="P:FA.COA.API.Models.DataModel.parameterDataModel.eventsQuery.SearchType">
+            <summary>
+            1.精確搜尋 2.模糊搜尋
+            </summary>
+        </member>
     </members>
 </doc>
