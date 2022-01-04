@@ -23,5 +23,34 @@ namespace FA.COA.API.Models.DataModel
             /// </summary>
             public int SearchType { get; set; }
         }
+
+        public class bufferQuery
+        {
+            public BufferRectangle BufferRectangle { get; set; }
+
+            public BufferCenter BufferCenter { get; set; }
+
+            public decimal radius { get; set; }
+
+            public int filterValue { get; set; }
+        }
+
+        public class BufferCenter
+        {
+            public decimal CenterLon { get; set; }
+
+            public decimal CenterLat { get; set; }         
+        }
+
+        public class BufferRectangle
+        {
+            public decimal MaxLonX { get; set; }
+
+            public decimal MaxLatY { get; set; }
+
+            public decimal MinLonX { get; set; }
+
+            public decimal MinLatY { get; set; }
+        }
     }
 }

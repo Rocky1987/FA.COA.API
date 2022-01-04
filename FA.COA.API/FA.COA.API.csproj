@@ -200,9 +200,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DataModel\ShipPositionDataModel.cs" />
     <Compile Include="Models\DataModel\EventsDataModel.cs" />
     <Compile Include="Models\DataModel\parameterDataModel.cs" />
+    <Compile Include="Models\Repository\ShipPositionRepository.cs" />
     <Compile Include="Models\Repository\EventsRepository.cs" />
+    <Compile Include="Models\Service\ShipPositionService.cs" />
     <Compile Include="Models\Service\EventsService.cs" />
     <Compile Include="Models\Service\HelplerService.cs" />
     <Compile Include="Models\ViewModel\EventsViewModel.cs" />
