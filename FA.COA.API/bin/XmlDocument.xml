@@ -495,6 +495,21 @@
             <param name="id"></param>
             <returns>string</returns>
         </member>
+        <member name="T:FA.COA.API.Models.DataModel.ShipPositionDataModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:FA.COA.API.Models.DataModel.ShipPositionDataModel.ShipPosition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:FA.COA.API.Models.DataModel.ShipPositionDataModel.ShipPosition_ShipStatic">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:FA.COA.API.Models.DataModel.EventsDataModel">
             <summary>
             Evenets'DTO 只建有用到的欄位
