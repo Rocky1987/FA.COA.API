@@ -32,7 +32,8 @@ namespace FA.COA.API.Models.DataModel
 
             public decimal radius { get; set; }
 
-            public int filterValue { get; set; }
+            public int FilterID { get; set; }
+
         }
 
         public class BufferCenter
