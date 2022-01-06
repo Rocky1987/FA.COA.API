@@ -10,9 +10,11 @@ namespace FA.COA.API.Models.Service
     public class ShipPositionService
     {
         ShipPositionRepository _shipPositionRepository = null;
+        FilterDetailsRepository _filterDetailsRepository = null;
         public ShipPositionService()
         {
             _shipPositionRepository = new ShipPositionRepository();
+            _filterDetailsRepository = new FilterDetailsRepository();
         }
 
         public int calBufferShipData(parameterDataModel.bufferQuery model)
@@ -35,7 +37,34 @@ namespace FA.COA.API.Models.Service
                 if(innerRadiusShips.Count > 0)
                 {
                     //3.取得篩選下拉選單資料表資訊  [filterDetails]
+                    IEnumerable<FilterDetailsDataModel.FilterDetails> _filterDetails = _filterDetailsRepository.GetFilterDetailsData(model);
 
+                    if(_filterDetails != null && _filterDetails.Any())
+                    {
+                        //3.1 取得篩選條件最後一筆，如果是全選ShipID = 0 則其他條件不用再看為全選
+                        bool isSelectAll = _filterDetails.LastOrDefault().ShipTypeID == 0 ? true : false;
+
+                        if (!isSelectAll)
+                        {
+                          List<ShipPositionDataModel.ShipPosition_ShipStatic> afterFilterDataList = new List<ShipPositionDataModel.ShipPosition_ShipStatic>();
+
+                          foreach (FilterDetailsDataModel.FilterDetails filterDetail in _filterDetails)
+                            {
+                                IEnumerable<ShipPositionDataModel.ShipPosition_ShipStatic>  afterFilterData = _shipPositionRepository.GetFilterBufferRangeShipPositionData(model, filterDetail);
+
+                                if(afterFilterData != null && afterFilterData.Any())
+                                {
+                                    afterFilterDataList.AddRange(afterFilterData);
+                                }
+                            }
+
+                            return afterFilterDataList.Count();
+                        }
+                        else
+                        {
+                            return innerRadiusShips.Count;
+                        }                    
+                    }
                 }
                 else
                 {
