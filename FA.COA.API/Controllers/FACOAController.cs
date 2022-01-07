@@ -8,14 +8,17 @@ using System.Web.Http;
 using FA.COA.API.Models.DataModel;
 using FA.COA.API.Models.Service;
 using FA.COA.API.Models.ViewModel;
+using Newtonsoft.Json;
 namespace FA.COA.API.Controllers
 {
     public class FACOAController : ApiController
     {
         EventsService _eventsService = null;
+        ShipPositionService _shipPositionService = null;
         public FACOAController()
         {
             this._eventsService = new EventsService();
+            this._shipPositionService = new ShipPositionService();
         }
         // POST api/FACOA
         /// <summary>
@@ -38,7 +41,32 @@ namespace FA.COA.API.Controllers
             {
                 resp.Status = 0;
                 resp.ErrorMessage = ex.Message;
-            }                       
+            }
+            return HelplerService.getJsonStr(resp);
+        }
+
+
+        /// <summary>
+        /// 取得漁船數量
+        /// </summary>
+        /// <param></param>
+        /// <returns>ShipCount</returns>
+        /// 
+        [HttpPost]
+        public HttpResponseMessage GetShipCountData([FromBody] parameterDataModel.bufferQuery model)
+        {
+            APIViewModel<int> resp = new APIViewModel<int>();
+            try
+            {
+                int viewData = this._shipPositionService.calBufferShipData(model);
+                resp.Data = viewData;
+                resp.Status = 1;
+            }
+            catch (Exception ex)
+            {
+                resp.Status = 0;
+                resp.ErrorMessage = ex.Message;
+            }
             return HelplerService.getJsonStr(resp);
         }
     }

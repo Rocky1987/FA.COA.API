@@ -16,9 +16,11 @@ namespace FA.COA.API.Models.Repository
             DynamicParameters sqlParam = new DynamicParameters();
             sqlParam.Add("FilterID", model.FilterID);
             #region SQL語法
-            sqlQuery = @"SELECT 
+            sqlQuery = @"
+              Select * From(
+                           SELECT 
                           [FilterID]
-                         ,[Order]
+                         ,[Order] As OD
                          ,[Enable]
                          ,[ShipName]
                          ,[MMSI]
@@ -56,7 +58,7 @@ namespace FA.COA.API.Models.Repository
                      Where FilterID = @FilterID
                      And Enable = 1 
                      And Show = 1
-                     Order By Order";
+                    ) As FDTable Order By FDTable.OD ";
 
             #endregion
 
