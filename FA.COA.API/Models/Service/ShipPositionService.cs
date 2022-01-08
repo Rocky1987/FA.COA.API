@@ -63,7 +63,11 @@ namespace FA.COA.API.Models.Service
                         else
                         {
                             return innerRadiusShips.Count;
-                        }                    
+                        }
+                    }
+                    else
+                    {
+                        return innerRadiusShips.Count;
                     }
                 }
                 else

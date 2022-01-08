@@ -58,7 +58,11 @@ namespace FA.COA.API.Models.Repository
                      Where FilterID = @FilterID
                      And Enable = 1 
                      And Show = 1
-                    ) As FDTable Order By FDTable.OD ";
+                    ) As FDTable 
+                    Where FDTable.FilterID = @FilterID
+                    And FDTable.Enable = 1 
+                    And FDTable.Show = 1
+                    Order By FDTable.OD ";
 
             #endregion
 
