@@ -176,7 +176,10 @@ namespace FA.COA.API.Models.Repository
                     	--And SP.Latitude <= 22.7100 and SP.Latitude >= 22.40071 
                         SP.Longitude <= @MaxLonX and SP.Longitude >= @MinLonX
                         And SP.Latitude <= @MaxLatY and SP.Latitude >= @MinLatY 
-                    	And ((SP.SOG >= 0.5 And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) > 2) Or (SP.SOG <= 0.5  And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) > 12)) 
+                        --測試
+                    	--And ((SP.SOG >= 0.5 And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) > 2) Or (SP.SOG <= 0.5  And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) > 12)) 
+                        --正式
+					    And ((SP.SOG >= 0.5 And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) <= 2) Or (SP.SOG <= 0.5  And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) <= 12))
                     
                       --以ShipPosID編組 並以回船時間做排序，取最新一筆的船，並與ShipStatic做JOIN。
                         Select 
@@ -221,39 +224,39 @@ namespace FA.COA.API.Models.Repository
             if (!string.IsNullOrEmpty(filter.MMSI))
             {
                 sqlParam.Add("MMSI", filter.MMSI);
-                sqlQuery += " And SP_MMSI = @MMSI ";
+                sqlQuery += " And tempSubTable.MMSI = @MMSI ";
             }
 
             //航行狀態      
             if(filter.NavStatusID > 0)
             {
                 sqlParam.Add("NavigationalStatus", filter.NavStatusID);
-                sqlQuery += " And (SP_NavigationalStatus = @SP_NavigationalStatus)";
+                sqlQuery += " And (tempSubTable.NavigationalStatus = @SP_NavigationalStatus)";
             }
 
             //AIS型式
             if (filter.AisTypeID == 0)
             {
-                sqlQuery += " And SP_MessageId in (0) ";
+                sqlQuery += " And tempSubTable.MessageId in (0) ";
             }else if(filter.AisTypeID == 1)
             {
-                sqlQuery += " And SP_MessageIdin (1,2,3) ";
+                sqlQuery += " And tempSubTable.MessageId in (1,2,3) ";
             }
             else if (filter.AisTypeID == 2)
             {
-                sqlQuery += " And SP_MessageId in (18,19) ";
+                sqlQuery += " And tempSubTable.MessageId in (18,19) ";
             }
             else if (filter.AisTypeID == 3)
             {
-                sqlQuery += " And SP_MessageId in (21) ";
+                sqlQuery += " And tempSubTable.MessageId in (21) ";
             }
             else if (filter.AisTypeID == 4 || filter.AisTypeID == 5)
             {
-                sqlQuery += " And SP_MessageId in (9) ";
+                sqlQuery += " And tempSubTable.MessageId in (9) ";
             }
             else if (filter.AisTypeID == 6)
             {
-                sqlQuery += " And SP_MessageId in (4) ";
+                sqlQuery += " And tempSubTable.MessageId in (4) ";
 
             }
 
@@ -262,8 +265,8 @@ namespace FA.COA.API.Models.Repository
             {
                 sqlParam.Add("MaxDataAge", filter.MaxDataAge);
                 sqlParam.Add("MinDataAge", filter.MinDataAge);
-                sqlQuery += " And DATEDIFF(MINUTE, SP.RecvTime, SYSDATETIME()) >= @MinDataAge ";
-                sqlQuery += " And DATEDIFF(MINUTE, SP.RecvTime, SYSDATETIME()) <= @MaxDataAge ";
+                sqlQuery += " And DATEDIFF(MINUTE, tempSubTable.RecvTime, SYSDATETIME()) >= @MinDataAge ";
+                sqlQuery += " And DATEDIFF(MINUTE, tempSubTable.RecvTime, SYSDATETIME()) <= @MaxDataAge ";
             }
 
             //最小對地速度Min SOG,最大對地速度Max SOG, Max SOG > 0 且min 不可大於Max
@@ -271,17 +274,8 @@ namespace FA.COA.API.Models.Repository
             {
                 sqlParam.Add("MaxSpeed", filter.MaxSpeed);
                 sqlParam.Add("MinSpeed", filter.MinSpeed);
-                sqlQuery += " And @MinSpeed <=  SP_SOG  ";
-                sqlQuery += " And SP_SOG <=  @MaxSpeed ";
-            }
-
-            //最小對地速度Min SOG,最大對地速度Max SOG, Max SOG > 0 且min 不可大於Max
-            if (filter.MaxSpeed > 0 && filter.MaxSpeed > filter.MinSpeed)
-            {
-                sqlParam.Add("MaxSpeed", filter.MaxSpeed);
-                sqlParam.Add("MinSpeed", filter.MinSpeed);
-                sqlQuery += " And @MinSpeed <=  SP_SOG  ";
-                sqlQuery += " And SP_SOG <=  @MaxSpeed ";
+                sqlQuery += " And @MinSpeed <=  tempSubTable.SOG  ";
+                sqlQuery += " And tempSubTable.SOG <=  @MaxSpeed ";
             }
 
             //最小對地航向Min COG, 最大對地航向MaxCOG, Max COG > 0 且min 不可大於Max
@@ -289,43 +283,43 @@ namespace FA.COA.API.Models.Repository
             {
                 sqlParam.Add("MaxCourse", filter.MaxCourse);
                 sqlParam.Add("MinCourse", filter.MinCourse);
-                sqlQuery += " And @MinCourse <=  SP_COG  ";
-                sqlQuery += " And SP_COG <=  @MaxCourse ";
+                sqlQuery += " And @MinCourse <=  tempSubTable.COG ";
+                sqlQuery += " And tempSubTable.COG <=  @MaxCourse ";
             }
 
             //資料來源 0為全選
             if (filter.DataSourceTypeID > 0)
             {
                 sqlParam.Add("DataSourceTypeID", filter.DataSourceTypeID);
-                sqlQuery += " And SP_DataSourceTypeID = @DataSourceTypeID ";
+                sqlQuery += " And tempSubTable.DataSourceTypeID = @DataSourceTypeID ";
             }
 
             //IMO
             if (!string.IsNullOrEmpty(filter.IMO))
             {
                 sqlParam.Add("IMO", filter.IMO);
-                sqlQuery += " And SS_IMO = @SS_IMO ";
+                sqlQuery += " And SS.IMO = @SS_IMO ";
             }
 
             //船名
             if (!string.IsNullOrEmpty(filter.ShipName))
             {
                 sqlParam.Add("ShipName", filter.ShipName);
-                sqlQuery += " And SS_Name = @ShipName ";
+                sqlQuery += " And SS.Name = @ShipName ";
             }
 
             //呼號
-            if (!string.IsNullOrEmpty(filter.ShipName))
+            if (!string.IsNullOrEmpty(filter.CallSign))
             {
                 sqlParam.Add("CallSign", filter.CallSign);
-                sqlQuery += " And SS_CallSign = @CallSign ";
+                sqlQuery += " And SS.CallSign = @CallSign ";
             }
 
             //船舶型式
             if (filter.ShipTypeID > 0)
             {
                 sqlParam.Add("ShipTypeID", filter.ShipTypeID);
-                sqlQuery += " And SS_ShipType = @ShipTypeID ";
+                sqlQuery += " And SS.ShipType = @ShipTypeID ";
             }
 
             //最小船長MinLength.,最大船長MaxLength., 最大船長Max, MaxLength > 0 且min 不可大於Max
@@ -333,8 +327,8 @@ namespace FA.COA.API.Models.Repository
             {
                 sqlParam.Add("MaxLength", filter.MaxLength);
                 sqlParam.Add("MinLength", filter.MinLength);
-                sqlQuery += " And @MinLength <=  (SS_Dimension_A + SS_Dimension_B) ";
-                sqlQuery += " And (SS_Dimension_A + SS_Dimension_B) <=  @MaxLength ";
+                sqlQuery += " And @MinLength <=  (SS.Dimension_A + SS.Dimension_B) ";
+                sqlQuery += " And (SS.Dimension_A + SS.Dimension_B) <=  @MaxLength ";
             }
 
             #endregion
