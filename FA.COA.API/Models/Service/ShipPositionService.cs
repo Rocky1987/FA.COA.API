@@ -80,9 +80,7 @@ namespace FA.COA.API.Models.Service
             {
                 //如果範圍內沒有任何漁船數量，直接回傳0
                 return 0;
-            }
-            
-            return 1;
+            }                 
         }
     }
 }

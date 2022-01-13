@@ -67,8 +67,11 @@ namespace FA.COA.API.Models.Repository
                     	--And SP.Latitude <= 22.7100 and SP.Latitude >= 22.40071 
                         SP.Longitude <= @MaxLonX and SP.Longitude >= @MinLonX
                         And SP.Latitude <= @MaxLatY and SP.Latitude >= @MinLatY 
-                    	And ((SP.SOG >= 0.5 And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) > 2) Or (SP.SOG <= 0.5  And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) > 12)) 
-                    
+                        --測試
+                    	--And ((SP.SOG >= 0.5 And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) > 2) Or (SP.SOG <= 0.5  And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) > 12)) 
+                         --正式
+					    And ((SP.SOG >= 0.5 And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) <= 2) Or (SP.SOG <= 0.5  And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) <= 12))                    
+
                       --以ShipPosID編組 並以回船時間做排序，取最新一筆的船，並與ShipStatic做JOIN。
                         Select 
                     	   tempSubTable.rowNumber
@@ -340,72 +343,5 @@ namespace FA.COA.API.Models.Repository
             }
             #endregion
         }
-
-        //public int InsertAfterQueryShipPositionData(ShipPositionDataModel.ShipPosition_ShipStatic model, SqlConnection conn)
-        //{
-        //    string sqlExcute = string.Empty, sqlWhere = string.Empty;
-        //    DynamicParameters sqlParam = new DynamicParameters();
-        //    sqlParam.Add("SP_ShipPosID", model.SP_ShipPosID);
-        //    sqlParam.Add("SP_RecvTime", model.SP_RecvTime);
-        //    sqlParam.Add("SP_MessageId", model.SP_MessageId);
-        //    sqlParam.Add("MinLatY", model.SP_NavigationalStatus);
-
-        //    #region SQL語法
-
-        //    sqlExcute = @" --宣告暫存表
-        //                Declare @tempShipPosition table
-        //            	(
-        //            		ShipPosID  int,
-        //            		RecvTime  datetime,
-        //            	    MessageId  smallint,
-        //                    NavigationalStatus  smallint,
-        //                    SOG  float,
-        //                    Longitude  float,
-        //                    Latitude  float,
-        //                    COG  float,
-        //                    MMSI int,
-        //                    DataSourceTypeID smallint
-        //            	)
-
-        //                --輸入查詢結果
-        //            	Insert Into @tempShipPosition
-        //            	(
-        //            	    ShipPosID  
-        //            	    ,RecvTime 
-        //            	    ,MessageId  
-        //            	    ,NavigationalStatus 
-        //            	    ,SOG  
-        //            	    ,Longitude  
-        //            	    ,Latitude  
-        //            	    ,COG  
-        //            	    ,MMSI 
-        //            	    ,DataSourceTypeID 
-        //            	)
-        //            	Select 
-        //            	  [ShipPosID]
-        //                  ,SP.[RecvTime]
-        //                  ,[MessageId]
-        //                  ,[NavigationalStatus]
-        //                  ,[SOG]
-        //                  ,[Longitude]
-        //                  ,[Latitude]
-        //                  ,[COG]
-        //                  ,[MMSI]
-        //                  ,[DataSourceTypeID]
-        //            	   FROM [AIS211228].[dbo].[ShipPosition] As SP 
-        //                Where 
-        //                --SP.Longitude <= 120.7110 and SP.Longitude >= 120.4012
-        //            	--And SP.Latitude <= 22.7100 and SP.Latitude >= 22.40071 
-        //                SP.Longitude <= @MaxLonX and SP.Longitude >= @MinLonX
-        //                And SP.Latitude <= @MaxLatY and SP.Latitude >= @MinLatY 
-        //            	And ((SP.SOG >= 0.5 And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) > 2) Or (SP.SOG <= 0.5  And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) > 12)) ";
-
-
-        //    #endregion
-
-        //    #region SQL 查詢          
-        //        return conn.Execute(sqlExcute, sqlParam);            
-        //    #endregion
-        //}
     }
 }
