@@ -14,7 +14,7 @@ namespace FA.COA.API.Models.Repository
         {
             string sqlQuery = string.Empty, sqlWhere = string.Empty;
             DynamicParameters sqlParam = new DynamicParameters();
-           
+
             #region SQL語法
             sqlQuery = @"SELECT  
                               [EventID]
@@ -30,9 +30,9 @@ namespace FA.COA.API.Models.Repository
                         	 ,C2M.CTNo
                         	 ,Z.ZoneName
                          FROM [VTS].[dbo].[Events] As Ev
-                         INNER Join [VTS].[dbo].[CT2MMSI] As C2M On C2M.MMSI = EV.MMSI
-                         INNER Join [VTS].[dbo].[Zones] As Z On Z.ZoneID = EV.ZoneID
-                         Where Ev.ConditionID1 in (1,2)";
+                         INNER Join " + ConfigurationManager.AppSettings["MMSITableName"] + " As C2M On C2M.MMSI = EV.MMSI ";
+            sqlQuery += @" INNER Join [VTS].[dbo].[Zones] As Z On Z.ZoneID = EV.ZoneID
+                           Where Ev.ConditionID1 in (1,2)";
 
             if (!string.IsNullOrEmpty(model.CTNo))
             {
