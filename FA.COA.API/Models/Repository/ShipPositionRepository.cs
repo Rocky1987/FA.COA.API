@@ -60,9 +60,9 @@ namespace FA.COA.API.Models.Repository
                           ,[Latitude]
                           ,[COG]
                           ,[MMSI]
-                          ,[DataSourceTypeID]
-                    	   FROM [AIS211228].[dbo].[ShipPosition] As SP 
-                        Where 
+                          ,[DataSourceTypeID] ";
+            sqlQuery += " FROM " + ConfigurationManager.AppSettings["ShipPositionName"]+ " As SP ";
+            sqlQuery += @" Where 
                         --SP.Longitude <= 120.7110 and SP.Longitude >= 120.4012
                     	--And SP.Latitude <= 22.7100 and SP.Latitude >= 22.40071 
                         SP.Longitude <= @MaxLonX and SP.Longitude >= @MinLonX
@@ -107,9 +107,9 @@ namespace FA.COA.API.Models.Repository
                           ,[MMSI]
                           ,[DataSourceTypeID]	
                     	   FROM @tempShipPosition As Sp
-                    	   ) As tempSubTable
-                    	   Inner Join [AIS211228].[dbo].ShipStatic As SS On SS.ShipStatID = tempSubTable.ShipPosID
-                    	   Where tempSubTable.rowNumber = 1";
+                    	   ) As tempSubTable ";
+            sqlQuery += @" Inner Join " + ConfigurationManager.AppSettings["ShipStaticName"] + " As SS On SS.ShipStatID = tempSubTable.ShipPosID ";
+            sqlQuery += " Where tempSubTable.rowNumber = 1 ";
 
       
             #endregion
@@ -172,9 +172,9 @@ namespace FA.COA.API.Models.Repository
                           ,[Latitude]
                           ,[COG]
                           ,[MMSI]
-                          ,[DataSourceTypeID]
-                    	   FROM [AIS211228].[dbo].[ShipPosition] As SP 
-                        Where 
+                          ,[DataSourceTypeID]";
+            sqlQuery += " FROM " +ConfigurationManager.AppSettings["ShipPositionName"]+ " As SP";
+            sqlQuery += @" Where 
                         --SP.Longitude <= 120.7110 and SP.Longitude >= 120.4012
                     	--And SP.Latitude <= 22.7100 and SP.Latitude >= 22.40071 
                         SP.Longitude <= @MaxLonX and SP.Longitude >= @MinLonX
@@ -219,9 +219,9 @@ namespace FA.COA.API.Models.Repository
                           ,[MMSI]
                           ,[DataSourceTypeID]	
                     	   FROM @tempShipPosition As Sp
-                    	   ) As tempSubTable
-                    	   Inner Join [AIS211228].[dbo].ShipStatic As SS On SS.ShipStatID = tempSubTable.ShipPosID
-                    	   Where tempSubTable.rowNumber = 1";
+                    	   ) As tempSubTable";
+              sqlQuery += " Inner Join " + ConfigurationManager.AppSettings["ShipStaticName"] + " As SS On SS.ShipStatID = tempSubTable.ShipPosID ";
+              sqlQuery += "Where tempSubTable.rowNumber = 1";
 
             //MMSI
             if (!string.IsNullOrEmpty(filter.MMSI))

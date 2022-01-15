@@ -53,9 +53,9 @@ namespace FA.COA.API.Models.Repository
                          ,[IMO]
                          ,[MinYear]
                          ,[MaxYear]
-                         ,[SourceName]
-                     FROM [VTS].[dbo].[FilterDetails]
-                     Where FilterID = @FilterID
+                         ,[SourceName]";
+            sqlQuery += " FROM " + ConfigurationManager.AppSettings["FilterDetailsName"];
+            sqlQuery += @" Where FilterID = @FilterID
                      And Enable = 1 
                      And Show = 1
                     ) As FDTable 
