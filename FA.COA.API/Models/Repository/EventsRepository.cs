@@ -28,9 +28,9 @@ namespace FA.COA.API.Models.Repository
                              ,[ConditionID1]
                              ,Ev.[ZoneID]
                         	 ,C2M.CTNo
-                        	 ,Z.ZoneName
-                         FROM [VTS].[dbo].[Events] As Ev
-                         INNER Join " + ConfigurationManager.AppSettings["MMSITableName"] + " As C2M On C2M.MMSI = EV.MMSI ";
+                        	 ,Z.ZoneName ";
+            sqlQuery += " FROM " +ConfigurationManager.AppSettings["EventsTableName"]+ " As Ev ";
+            sqlQuery +=  " INNER Join " + ConfigurationManager.AppSettings["MMSITableName"] + " As C2M On C2M.MMSI = EV.MMSI ";
             sqlQuery += @" INNER Join " + ConfigurationManager.AppSettings["ZonesTableName"] + " As Z On Z.ZoneID = EV.ZoneID ";
             sqlQuery += @" Where Ev.ConditionID1 in (1,2)";
 
