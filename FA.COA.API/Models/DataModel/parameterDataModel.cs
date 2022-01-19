@@ -9,7 +9,7 @@ namespace FA.COA.API.Models.DataModel
     {
         public class eventsQuery
         {
-            public string CTNo { get; set; }
+            public string CTNumber { get; set; }
 
             public string ZoneName { get; set; }
 

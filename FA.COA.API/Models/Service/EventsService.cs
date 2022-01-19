@@ -29,7 +29,7 @@ namespace FA.COA.API.Models.Service
                 COG = p.COG,
                 ConditionID1 = p.ConditionID1,
                 ZoneID = p.ZoneID,
-                CTNo = p.CTNo,
+                CTNumber = p.CTNumber,
                 ZoneName = p.ZoneName
             }).ToList();
 
