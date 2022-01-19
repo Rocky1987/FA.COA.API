@@ -10,6 +10,11 @@ namespace FA.COA.API.Models.Repository
 {
     public class EventsRepository
     {
+        string AlarmIDList = string.Empty;
+        public EventsRepository()
+        {
+            AlarmIDList = ConfigurationManager.AppSettings["AlarmIDList"];
+        }
         public IEnumerable<EventsDataModel.Events_CT2MMSI_Zones> GetEventsData(parameterDataModel.eventsQuery model)
         {
             string sqlQuery = string.Empty, sqlWhere = string.Empty;
@@ -19,6 +24,7 @@ namespace FA.COA.API.Models.Repository
             sqlQuery = @"SELECT  
                               [EventID]
                              ,[TimeStmp]
+                             ,Ev.[AlarmID]
                              ,Ev.[MMSI]
                              ,C2M.[ShipName]
                              ,[Lng]
@@ -33,7 +39,7 @@ namespace FA.COA.API.Models.Repository
             sqlQuery +=  " INNER Join " + ConfigurationManager.AppSettings["MMSITableName"] + " As C2M On C2M.MMSI = EV.MMSI ";
             sqlQuery += @" INNER Join " + ConfigurationManager.AppSettings["ZonesTableName"] + " As Z On Z.ZoneID = EV.ZoneID ";
             sqlQuery += @" Where Ev.ConditionID1 in (1,2)";
-
+            sqlQuery += "  And Ev.AlarmID in (" +AlarmIDList+ ") ";
             if (!string.IsNullOrEmpty(model.CTNumber))
             {
                 if (model.SearchType == 1)

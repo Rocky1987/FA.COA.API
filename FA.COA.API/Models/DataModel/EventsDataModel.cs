@@ -19,6 +19,8 @@ namespace FA.COA.API.Models.DataModel
 
             public DateTime TimeStmp { get; set; }
 
+            public int AlarmID { get; set; }
+
             public int MMSI { get; set; }
 
             public string ShipName { get; set; }
