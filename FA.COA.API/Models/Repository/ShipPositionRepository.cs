@@ -10,6 +10,17 @@ namespace FA.COA.API.Models.Repository
 {
     public class ShipPositionRepository
     {
+        string ShipPositionTableName = string.Empty;
+        string ShipStaticTableName = string.Empty;
+        public ShipPositionRepository()
+        {
+            //測試
+            //ShipPositionTableName = "[AIS211228]." + ConfigurationManager.AppSettings["ShipPositionName"];
+            //ShipStaticTableName = "[AIS211228]." + ConfigurationManager.AppSettings["ShipStaticName"];
+            //正式
+            ShipPositionTableName = "[AIS"+DateTime.Now.ToString("yyMMdd")+"]." + ConfigurationManager.AppSettings["ShipPositionName"];
+            ShipStaticTableName =   "[AIS" + DateTime.Now.ToString("yyMMdd")+"]." + ConfigurationManager.AppSettings["ShipStaticName"];
+        }
         public IEnumerable<ShipPositionDataModel.ShipPosition_ShipStatic> GetBufferRangeShipPositionData(parameterDataModel.bufferQuery model)
         {
             string sqlQuery = string.Empty, sqlWhere = string.Empty;
@@ -61,7 +72,7 @@ namespace FA.COA.API.Models.Repository
                           ,[COG]
                           ,[MMSI]
                           ,[DataSourceTypeID] ";
-            sqlQuery += " FROM " + ConfigurationManager.AppSettings["ShipPositionName"]+ " As SP ";
+            sqlQuery += " FROM " + ShipPositionTableName + " As SP ";
             sqlQuery += @" Where 
                         --SP.Longitude <= 120.7110 and SP.Longitude >= 120.4012
                     	--And SP.Latitude <= 22.7100 and SP.Latitude >= 22.40071 
@@ -108,7 +119,7 @@ namespace FA.COA.API.Models.Repository
                           ,[DataSourceTypeID]	
                     	   FROM @tempShipPosition As Sp
                     	   ) As tempSubTable ";
-            sqlQuery += @" Inner Join " + ConfigurationManager.AppSettings["ShipStaticName"] + " As SS On SS.ShipStatID = tempSubTable.ShipPosID ";
+            sqlQuery += @" Inner Join " + ShipStaticTableName + " As SS On SS.ShipStatID = tempSubTable.ShipPosID ";
             sqlQuery += " Where tempSubTable.rowNumber = 1 ";
 
       
@@ -173,7 +184,7 @@ namespace FA.COA.API.Models.Repository
                           ,[COG]
                           ,[MMSI]
                           ,[DataSourceTypeID]";
-            sqlQuery += " FROM " +ConfigurationManager.AppSettings["ShipPositionName"]+ " As SP";
+            sqlQuery += " FROM " + ShipPositionTableName + " As SP";
             sqlQuery += @" Where 
                         --SP.Longitude <= 120.7110 and SP.Longitude >= 120.4012
                     	--And SP.Latitude <= 22.7100 and SP.Latitude >= 22.40071 
@@ -220,7 +231,7 @@ namespace FA.COA.API.Models.Repository
                           ,[DataSourceTypeID]	
                     	   FROM @tempShipPosition As Sp
                     	   ) As tempSubTable";
-              sqlQuery += " Inner Join " + ConfigurationManager.AppSettings["ShipStaticName"] + " As SS On SS.ShipStatID = tempSubTable.ShipPosID ";
+              sqlQuery += " Inner Join " + ShipStaticTableName + " As SS On SS.ShipStatID = tempSubTable.ShipPosID ";
               sqlQuery += "Where tempSubTable.rowNumber = 1";
 
             //MMSI

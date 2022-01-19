@@ -20,31 +20,31 @@ namespace FA.COA.API.Models.Repository
                               [EventID]
                              ,[TimeStmp]
                              ,Ev.[MMSI]
-                             ,[ShipName]
+                             ,C2M.[ShipName]
                              ,[Lng]
                              ,[Lat]
                              ,[SOG]
                              ,[COG]
                              ,[ConditionID1]
                              ,Ev.[ZoneID]
-                        	 ,C2M.CTNo
+                        	 ,C2M.CTNumber
                         	 ,Z.ZoneName ";
             sqlQuery += " FROM " +ConfigurationManager.AppSettings["EventsTableName"]+ " As Ev ";
             sqlQuery +=  " INNER Join " + ConfigurationManager.AppSettings["MMSITableName"] + " As C2M On C2M.MMSI = EV.MMSI ";
             sqlQuery += @" INNER Join " + ConfigurationManager.AppSettings["ZonesTableName"] + " As Z On Z.ZoneID = EV.ZoneID ";
             sqlQuery += @" Where Ev.ConditionID1 in (1,2)";
 
-            if (!string.IsNullOrEmpty(model.CTNo))
+            if (!string.IsNullOrEmpty(model.CTNumber))
             {
                 if (model.SearchType == 1)
                 {
-                    sqlParam.Add("CTNo", model.CTNo);
-                    sqlQuery += "  And C2M.CTNo = @CTNo ";
+                    sqlParam.Add("CTNumber", model.CTNumber);
+                    sqlQuery += "  And C2M.CTNumber = @CTNumber ";
                 }
                 else if(model.SearchType == 2)
                 {
-                    sqlParam.Add("CTNo", "%" + model.CTNo + "%");
-                    sqlQuery += "  And C2M.CTNo like @CTNo ";
+                    sqlParam.Add("CTNumber", "%" + model.CTNumber + "%");
+                    sqlQuery += "  And C2M.CTNumber like @CTNumber ";
                 }
             }
 

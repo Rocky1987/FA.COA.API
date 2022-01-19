@@ -41,7 +41,7 @@ namespace FA.COA.API.Models.DataModel
         /// </summary>
         public class Events_CT2MMSI_Zones : Events
         {
-            public string CTNo { get; set; }
+            public string CTNumber { get; set; }
           
             public string ZoneName { get; set; }      
         }
