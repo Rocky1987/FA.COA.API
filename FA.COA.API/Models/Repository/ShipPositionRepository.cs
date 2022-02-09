@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Web;
 using Dapper;
 using FA.COA.API.Models.DataModel;
@@ -12,6 +13,7 @@ namespace FA.COA.API.Models.Repository
     {
         string ShipPositionTableName = string.Empty;
         string ShipStaticTableName = string.Empty;
+        string _connectStr = string.Empty;
         public ShipPositionRepository()
         {
             //測試
@@ -20,6 +22,7 @@ namespace FA.COA.API.Models.Repository
             //正式
             ShipPositionTableName = "[AIS"+DateTime.Now.ToString("yyMMdd")+"]." + ConfigurationManager.AppSettings["ShipPositionName"];
             ShipStaticTableName =   "[AIS" + DateTime.Now.ToString("yyMMdd")+"]." + ConfigurationManager.AppSettings["ShipStaticName"];
+            _connectStr = Encoding.UTF8.GetString(Convert.FromBase64String(ConfigurationManager.ConnectionStrings["FACOASQLConnection"].ConnectionString));
         }
         public IEnumerable<ShipPositionDataModel.ShipPosition_ShipStatic> GetBufferRangeShipPositionData(parameterDataModel.bufferQuery model)
         {
@@ -126,7 +129,7 @@ namespace FA.COA.API.Models.Repository
             #endregion
 
             #region SQL 查詢
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["FACOASQLConnection"].ConnectionString))
+            using (SqlConnection conn = new SqlConnection(_connectStr))
             {
                 return conn.Query<ShipPositionDataModel.ShipPosition_ShipStatic>(sqlQuery, sqlParam);
             }
@@ -348,7 +351,7 @@ namespace FA.COA.API.Models.Repository
             #endregion
 
             #region SQL 查詢
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["FACOASQLConnection"].ConnectionString))
+            using (SqlConnection conn = new SqlConnection(_connectStr))
             {
                 return conn.Query<ShipPositionDataModel.ShipPosition_ShipStatic>(sqlQuery, sqlParam);
             }
