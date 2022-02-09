@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Web;
 using Dapper;
 using FA.COA.API.Models.DataModel;
@@ -10,6 +11,11 @@ namespace FA.COA.API.Models.Repository
 {
     public class FilterDetailsRepository
     {
+        string _connectStr = string.Empty;
+        public FilterDetailsRepository()
+        {
+            _connectStr = Encoding.UTF8.GetString(Convert.FromBase64String(ConfigurationManager.ConnectionStrings["FACOASQLConnection"].ConnectionString));
+        }
         public IEnumerable<FilterDetailsDataModel.FilterDetails> GetFilterDetailsData(parameterDataModel.bufferQuery model)
         {
             string sqlQuery = string.Empty, sqlWhere = string.Empty;
@@ -67,7 +73,7 @@ namespace FA.COA.API.Models.Repository
             #endregion
 
             #region SQL 查詢
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["FACOASQLConnection"].ConnectionString))
+            using (SqlConnection conn = new SqlConnection(_connectStr))
             {
                 return conn.Query<FilterDetailsDataModel.FilterDetails>(sqlQuery, sqlParam);
             }
