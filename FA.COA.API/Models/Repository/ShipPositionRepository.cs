@@ -47,6 +47,7 @@ namespace FA.COA.API.Models.Repository
                             Latitude  float,
                             COG  float,
                             MMSI int,
+                            LocalRecvTime  datetime,
                             DataSourceTypeID smallint
                     	)
                         
@@ -62,6 +63,7 @@ namespace FA.COA.API.Models.Repository
                     	    ,Latitude  
                     	    ,COG  
                     	    ,MMSI 
+                            ,LocalRecvTime
                     	    ,DataSourceTypeID 
                     	)
                     	Select 
@@ -74,6 +76,7 @@ namespace FA.COA.API.Models.Repository
                           ,[Latitude]
                           ,[COG]
                           ,[MMSI]
+                          ,[LocalRecvTime]
                           ,[DataSourceTypeID] ";
             sqlQuery += " FROM " + ShipPositionTableName + " As SP ";
             sqlQuery += @" Where 
@@ -82,9 +85,9 @@ namespace FA.COA.API.Models.Repository
                         SP.Longitude <= @MaxLonX and SP.Longitude >= @MinLonX
                         And SP.Latitude <= @MaxLatY and SP.Latitude >= @MinLatY 
                         --測試
-                    	--And ((SP.SOG >= 0.5 And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) > 2) Or (SP.SOG <= 0.5  And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) > 12)) 
+                    	--And ((SP.SOG >= 0.5 And DATEDIFF(HOUR, SP.LocalRecvTime, SYSDATETIME()) > 2) Or (SP.SOG <= 0.5  And DATEDIFF(HOUR, SP.LocalRecvTime, SYSDATETIME()) > 12)) 
                          --正式
-					    And ((SP.SOG >= 0.5 And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) <= 2) Or (SP.SOG <= 0.5  And DATEDIFF(HOUR, SP.RecvTime, SYSDATETIME()) <= 12))                    
+					    And ((SP.SOG >= 0.5 And DATEDIFF(HOUR, SP.LocalRecvTime, SYSDATETIME()) <= 2) Or (SP.SOG <= 0.5  And DATEDIFF(HOUR, SP.LocalRecvTime, SYSDATETIME()) <= 12))                    
 
                       --以ShipPosID編組 並以回船時間做排序，取最新一筆的船，並與ShipStatic做JOIN。
                         Select 
@@ -98,6 +101,7 @@ namespace FA.COA.API.Models.Repository
                           ,tempSubTable.[Latitude] As SP_Latitude
                           ,tempSubTable.[COG] As SP_COG
                           ,tempSubTable.[MMSI] As SP_MMSI
+                          ,tempSubTable.[LocalRecvTime] As SP_LocalRecvTime
                           ,tempSubTable.[DataSourceTypeID] As SP_DataSourceTypeID
                     	  ,SS.[ShipStatID] As SS_ShipStatID
                           ,SS.[RecvTime] As SS_RecvTime
@@ -119,6 +123,7 @@ namespace FA.COA.API.Models.Repository
                           ,[Latitude]
                           ,[COG]
                           ,[MMSI]
+                          ,Sp.[LocalRecvTime]
                           ,[DataSourceTypeID]	
                     	   FROM @tempShipPosition As Sp
                     	   ) As tempSubTable ";

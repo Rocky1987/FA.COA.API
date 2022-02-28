@@ -32,7 +32,7 @@ namespace FA.COA.API.Controllers
         {
             APIViewModel<List<EventsViewModel.Events_CT2MMSI_Zones>> resp = new APIViewModel<List<EventsViewModel.Events_CT2MMSI_Zones>>();
             try
-            {
+            {                
                 List<EventsViewModel.Events_CT2MMSI_Zones> viewData = this._eventsService.GetEventsData(model);
                 resp.Data = viewData;
                 resp.Status = 1;
