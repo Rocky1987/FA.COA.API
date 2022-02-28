@@ -16,7 +16,7 @@ namespace FA.COA.API.Models.Repository
         public EventsRepository()
         {
             AlarmIDList = ConfigurationManager.AppSettings["AlarmIDList"];
-            _connectStr = Encoding.UTF8.GetString(Convert.FromBase64String(ConfigurationManager.ConnectionStrings["FACOASQLConnection"].ConnectionString));
+            _connectStr = Encoding.UTF8.GetString(Convert.FromBase64String(ConfigurationManager.ConnectionStrings["FACOASQLConnection"].ConnectionString));           
         }
         public IEnumerable<EventsDataModel.Events_CT2MMSI_Zones> GetEventsData(parameterDataModel.eventsQuery model)
         {
@@ -59,8 +59,8 @@ namespace FA.COA.API.Models.Repository
 
             if (!string.IsNullOrEmpty(model.ZoneName))
             {
-                sqlParam.Add("ZoneName", model.ZoneName);
-                sqlQuery += "  And Z.ZoneName = @ZoneName ";
+                sqlParam.Add("ZoneName", "%" +model.ZoneName+ "%");
+                sqlQuery += "  And Z.ZoneName like @ZoneName ";
             }
 
             if (model.DateS.Year > 1980)
@@ -75,7 +75,7 @@ namespace FA.COA.API.Models.Repository
                 sqlQuery += "  And TimeStmp <= @DateE ";
             }
                                   
-            sqlQuery += " Order By EV.TimeStmp　";
+            sqlQuery += " Order By Z.ZoneName, C2M.CTNumber, EV.TimeStmp ";
             #endregion
 
             #region SQL 查詢
