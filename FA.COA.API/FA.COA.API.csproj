@@ -207,6 +207,7 @@
     <Compile Include="Models\Repository\FilterDetailsRepository.cs" />
     <Compile Include="Models\Repository\ShipPositionRepository.cs" />
     <Compile Include="Models\Repository\EventsRepository.cs" />
+    <Compile Include="Models\Service\CoordinateTransformService.cs" />
     <Compile Include="Models\Service\ShipPositionService.cs" />
     <Compile Include="Models\Service\EventsService.cs" />
     <Compile Include="Models\Service\HelplerService.cs" />
