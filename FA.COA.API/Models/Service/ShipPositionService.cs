@@ -11,10 +11,12 @@ namespace FA.COA.API.Models.Service
     {
         ShipPositionRepository _shipPositionRepository = null;
         FilterDetailsRepository _filterDetailsRepository = null;
+        CoordinateTransformService _coordinateTransformService = null;
         public ShipPositionService()
         {
             _shipPositionRepository = new ShipPositionRepository();
             _filterDetailsRepository = new FilterDetailsRepository();
+            _coordinateTransformService = new CoordinateTransformService();
         }
 
         public int calBufferShipData(parameterDataModel.bufferQuery model)
@@ -28,7 +30,11 @@ namespace FA.COA.API.Models.Service
                 List<ShipPositionDataModel.ShipPosition_ShipStatic> innerRadiusShips = new List<ShipPositionDataModel.ShipPosition_ShipStatic>();
                 foreach(ShipPositionDataModel.ShipPosition_ShipStatic item in _ufferRangeShipPositionData)
                 {
-                    double distance = Math.Round(Math.Sqrt(Math.Pow((double)model.BufferCenter.CenterLon - (double)item.SP_Longitude, 2) + Math.Pow((double)model.BufferCenter.CenterLat - (double)item.SP_Latitude, 2)),4);
+                    CoordinateTransformService.PointLocation pointLocationCenter = _coordinateTransformService.Cal_lonlat_To_twd97((double)model.BufferCenter.CenterLon, (double)model.BufferCenter.CenterLat);
+                    CoordinateTransformService.PointLocation pointLocationSP = _coordinateTransformService.Cal_lonlat_To_twd97((double)item.SP_Longitude, (double)item.SP_Latitude);
+
+
+                    double distance = Math.Round(Math.Sqrt(Math.Pow( Convert.ToDouble(pointLocationCenter.x) - Convert.ToDouble(pointLocationSP.x), 2) + Math.Pow(Convert.ToDouble(pointLocationCenter.y) - Convert.ToDouble(pointLocationSP.y), 2)),4);
                     if(distance <= (double)model.radius)
                     {
                         innerRadiusShips.Add(item);

@@ -548,5 +548,10 @@
             1.精確搜尋 2.模糊搜尋
             </summary>
         </member>
+        <member name="T:FA.COA.API.Models.Service.CoordinateTransformService.PointLocation">
+            <summary>
+            點物件
+            </summary>
+        </member>
     </members>
 </doc>
