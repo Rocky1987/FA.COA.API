@@ -55,10 +55,10 @@ namespace FA.COA.API.Controllers
         [HttpPost]
         public HttpResponseMessage GetShipCountData([FromBody] parameterDataModel.bufferQuery model)
         {
-            APIViewModel<int> resp = new APIViewModel<int>();
+            APIViewModel<List<ShipPositionDataModel.ShipPosition_ShipStatic>> resp = new APIViewModel<List<ShipPositionDataModel.ShipPosition_ShipStatic>>();
             try
             {
-                int viewData = this._shipPositionService.calBufferShipData(model);
+                List<ShipPositionDataModel.ShipPosition_ShipStatic> viewData = this._shipPositionService.calBufferShipData(model);
                 resp.Data = viewData;
                 resp.Status = 1;
             }
