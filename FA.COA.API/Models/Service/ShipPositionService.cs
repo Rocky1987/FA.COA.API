@@ -19,8 +19,10 @@ namespace FA.COA.API.Models.Service
             _coordinateTransformService = new CoordinateTransformService();
         }
 
-        public int calBufferShipData(parameterDataModel.bufferQuery model)
+        public List<ShipPositionDataModel.ShipPosition_ShipStatic> calBufferShipData(parameterDataModel.bufferQuery model)
         {
+            List<ShipPositionDataModel.ShipPosition_ShipStatic> shipPosition_ShipStaticsList = new List<ShipPositionDataModel.ShipPosition_ShipStatic>();
+
             //1.直接計算取得buffer矩形  且SOG (大於 0.5 且2小時內的船 或 小於0.5 且 12小時內的船)
             IEnumerable<ShipPositionDataModel.ShipPosition_ShipStatic> _ufferRangeShipPositionData = _shipPositionRepository.GetBufferRangeShipPositionData(model);
 
@@ -64,28 +66,28 @@ namespace FA.COA.API.Models.Service
                                 }
                             }
 
-                            return afterFilterDataList.Count();
+                            return afterFilterDataList;
                         }
                         else
                         {
-                            return innerRadiusShips.Count;
+                            return innerRadiusShips;
                         }
                     }
                     else
                     {
-                        return innerRadiusShips.Count;
+                        return innerRadiusShips;
                     }
                 }
                 else
                 {
                     //如果濾完半徑內沒有任何漁船數量，直接回傳0
-                    return 0;
+                    return new List<ShipPositionDataModel.ShipPosition_ShipStatic>(); ;
                 }
             }
             else
             {
                 //如果範圍內沒有任何漁船數量，直接回傳0
-                return 0;
+                return new List<ShipPositionDataModel.ShipPosition_ShipStatic>(); ;
             }                 
         }
     }
