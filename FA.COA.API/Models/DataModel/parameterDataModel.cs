@@ -14,9 +14,9 @@ namespace FA.COA.API.Models.DataModel
             public string ZoneName { get; set; }
 
             //預設時間七天 
-            public DateTime DateS { get; set; } = DateTime.Now.AddDays(-7);
+            public DateTime DateS { get; set; } = DateTime.Today.AddDays(-7);
 
-            public DateTime DateE { get; set; } = DateTime.Now;
+            public DateTime DateE { get; set; } = DateTime.Today.AddDays(1).AddSeconds(-1);
 
             /// <summary>
             /// 1.精確搜尋 2.模糊搜尋
