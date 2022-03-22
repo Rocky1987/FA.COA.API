@@ -90,20 +90,42 @@ namespace FA.COA.API.Models.Repository
 					    And ((SP.SOG >= 0.5 And DATEDIFF(HOUR, SP.LocalRecvTime, SYSDATETIME()) <= 2) Or (SP.SOG <= 0.5  And DATEDIFF(HOUR, SP.LocalRecvTime, SYSDATETIME()) <= 12))                    
 
                       --以ShipPosID編組 並以回船時間做排序，取最新一筆的船，並與ShipStatic做JOIN。
-                        Select 
-                    	   tempSubTable.rowNumber
-                          ,tempSubTable.[ShipPosID] As SP_ShipPosID
-                          ,tempSubTable.[RecvTime] As SP_RecvTime
-                          ,tempSubTable.[MessageId] As SP_MessageId
-                          ,tempSubTable.[NavigationalStatus] As SP_NavigationalStatus
-                          ,tempSubTable.[SOG] As SP_SOG
-                          ,tempSubTable.[Longitude] As SP_Longitude
-                          ,tempSubTable.[Latitude] As SP_Latitude
-                          ,tempSubTable.[COG] As SP_COG
-                          ,tempSubTable.[MMSI] As SP_MMSI
-                          ,tempSubTable.[LocalRecvTime] As SP_LocalRecvTime
-                          ,tempSubTable.[DataSourceTypeID] As SP_DataSourceTypeID
-                    	  ,SS.[ShipStatID] As SS_ShipStatID
+                          Select  
+						   tempSubTable.rowNumber
+                          ,tempSubTable.SP_ShipPosID
+                          ,tempSubTable.SP_RecvTime
+                          ,tempSubTable.SP_MessageId
+                          ,tempSubTable.SP_NavigationalStatus
+                          ,tempSubTable.SP_SOG
+                          ,tempSubTable.SP_Longitude
+                          ,tempSubTable.SP_Latitude
+                          ,tempSubTable.SP_COG
+                          ,tempSubTable.SP_MMSI
+                          ,tempSubTable.SP_LocalRecvTime
+                          ,tempSubTable.SP_DataSourceTypeID
+                    	  ,tempSubTable.SS_ShipStatID
+                          ,tempSubTable.SS_RecvTime
+                          ,tempSubTable.SS_IMO
+                          ,tempSubTable.SS_CallSign
+                          ,tempSubTable.SS_Name
+                          ,tempSubTable.SS_ShipType
+                          ,tempSubTable.SS_Dimension_A 
+                          ,tempSubTable.SS_Dimension_B
+						 From(
+						 Select 
+                    	   ROW_NUMBER() OVER(PARTITION BY Sp.ShipPosID ORDER BY SP.LocalRecvTime Desc) As rowNumber
+                    	  ,Sp.[ShipPosID] As SP_ShipPosID
+                          ,Sp.[RecvTime] As SP_RecvTime
+                          ,Sp.[MessageId] As SP_MessageId
+                          ,Sp.[NavigationalStatus] As SP_NavigationalStatus
+                          ,Sp.[SOG]  As SP_SOG
+                          ,Sp.[Longitude] As SP_Longitude
+                          ,Sp.[Latitude] As SP_Latitude
+                          ,Sp.[COG] As SP_COG
+                          ,Sp.[MMSI] As SP_MMSI
+                          ,Sp.[LocalRecvTime] As SP_LocalRecvTime
+                          ,Sp.[DataSourceTypeID] As SP_DataSourceTypeID
+						  ,SS.[ShipStatID] As SS_ShipStatID
                           ,SS.[RecvTime] As SS_RecvTime
                           ,SS.[IMO] As SS_IMO
                           ,SS.[CallSign] As SS_CallSign
@@ -111,26 +133,10 @@ namespace FA.COA.API.Models.Repository
                           ,SS.[ShipType] As SS_ShipType
                           ,SS.[Dimension_A] As SS_Dimension_A 
                           ,SS.[Dimension_B] As SS_Dimension_B
-                       From (
-                    	Select 
-                    		ROW_NUMBER() OVER(PARTITION BY Sp.ShipPosID ORDER BY SP.LocalRecvTime Desc) As rowNumber
-                    	  ,[ShipPosID]
-                          ,Sp.[RecvTime]
-                          ,[MessageId]
-                          ,[NavigationalStatus]
-                          ,[SOG]
-                          ,[Longitude]
-                          ,[Latitude]
-                          ,[COG]
-                          ,[MMSI]
-                          ,Sp.[LocalRecvTime]
-                          ,[DataSourceTypeID]	
-                    	   FROM @tempShipPosition As Sp
-                    	   ) As tempSubTable ";
-            sqlQuery += @" Inner Join " + ShipStaticTableName + " As SS On SS.ShipStatID = tempSubTable.ShipPosID ";
-            sqlQuery += " Where tempSubTable.rowNumber = 1 ";
-
-      
+                    	   FROM @tempShipPosition As Sp";
+            sqlQuery += @" Inner Join " + ShipStaticTableName + " As SS On SS.ShipStatID = Sp.ShipPosID ";
+            sqlQuery += @" ) As tempSubTable
+                           Where tempSubTable.rowNumber = 1 ";      
             #endregion
 
             #region SQL 查詢
@@ -205,21 +211,43 @@ namespace FA.COA.API.Models.Repository
                         --正式
 					    And ((SP.SOG >= 0.5 And DATEDIFF(HOUR, SP.LocalRecvTime, SYSDATETIME()) <= 2) Or (SP.SOG <= 0.5  And DATEDIFF(HOUR, SP.LocalRecvTime, SYSDATETIME()) <= 12))
                     
-                      --以ShipPosID編組 並以回船時間做排序，取最新一筆的船，並與ShipStatic做JOIN。
-                        Select 
-                    	   tempSubTable.rowNumber
-                          ,tempSubTable.[ShipPosID] As SP_ShipPosID
-                          ,tempSubTable.[RecvTime] As SP_RecvTime
-                          ,tempSubTable.[MessageId] As SP_MessageId
-                          ,tempSubTable.[NavigationalStatus] As SP_NavigationalStatus
-                          ,tempSubTable.[SOG] As SP_SOG
-                          ,tempSubTable.[Longitude] As SP_Longitude
-                          ,tempSubTable.[Latitude] As SP_Latitude
-                          ,tempSubTable.[COG] As SP_COG
-                          ,tempSubTable.[MMSI] As SP_MMSI
-                          ,tempSubTable.[LocalRecvTime] As SP_LocalRecvTime
-                          ,tempSubTable.[DataSourceTypeID] As SP_DataSourceTypeID
-                    	  ,SS.[ShipStatID] As SS_ShipStatID
+                    --以ShipPosID編組 並以回船時間做排序，取最新一筆的船，並與ShipStatic做JOIN。
+                          Select  
+						   tempSubTable.rowNumber
+                          ,tempSubTable.SP_ShipPosID
+                          ,tempSubTable.SP_RecvTime
+                          ,tempSubTable.SP_MessageId
+                          ,tempSubTable.SP_NavigationalStatus
+                          ,tempSubTable.SP_SOG
+                          ,tempSubTable.SP_Longitude
+                          ,tempSubTable.SP_Latitude
+                          ,tempSubTable.SP_COG
+                          ,tempSubTable.SP_MMSI
+                          ,tempSubTable.SP_LocalRecvTime
+                          ,tempSubTable.SP_DataSourceTypeID
+                    	  ,tempSubTable.SS_ShipStatID
+                          ,tempSubTable.SS_RecvTime
+                          ,tempSubTable.SS_IMO
+                          ,tempSubTable.SS_CallSign
+                          ,tempSubTable.SS_Name
+                          ,tempSubTable.SS_ShipType
+                          ,tempSubTable.SS_Dimension_A 
+                          ,tempSubTable.SS_Dimension_B
+						 From(
+						 Select 
+                    	   ROW_NUMBER() OVER(PARTITION BY Sp.ShipPosID ORDER BY SP.LocalRecvTime Desc) As rowNumber
+                    	  ,Sp.[ShipPosID] As SP_ShipPosID
+                          ,Sp.[RecvTime] As SP_RecvTime
+                          ,Sp.[MessageId] As SP_MessageId
+                          ,Sp.[NavigationalStatus] As SP_NavigationalStatus
+                          ,Sp.[SOG]  As SP_SOG
+                          ,Sp.[Longitude] As SP_Longitude
+                          ,Sp.[Latitude] As SP_Latitude
+                          ,Sp.[COG] As SP_COG
+                          ,Sp.[MMSI] As SP_MMSI
+                          ,Sp.[LocalRecvTime] As SP_LocalRecvTime
+                          ,Sp.[DataSourceTypeID] As SP_DataSourceTypeID
+						  ,SS.[ShipStatID] As SS_ShipStatID
                           ,SS.[RecvTime] As SS_RecvTime
                           ,SS.[IMO] As SS_IMO
                           ,SS.[CallSign] As SS_CallSign
@@ -227,62 +255,48 @@ namespace FA.COA.API.Models.Repository
                           ,SS.[ShipType] As SS_ShipType
                           ,SS.[Dimension_A] As SS_Dimension_A 
                           ,SS.[Dimension_B] As SS_Dimension_B
-                       From (
-                    	Select 
-                    		ROW_NUMBER() OVER(PARTITION BY Sp.ShipPosID ORDER BY SP.LocalRecvTime Desc) As rowNumber
-                    	  ,[ShipPosID]
-                          ,Sp.[RecvTime]
-                          ,[MessageId]
-                          ,[NavigationalStatus]
-                          ,[SOG]
-                          ,[Longitude]
-                          ,[Latitude]
-                          ,[COG]
-                          ,[MMSI]
-                          ,Sp.[LocalRecvTime]
-                          ,[DataSourceTypeID]	
-                    	   FROM @tempShipPosition As Sp
-                    	   ) As tempSubTable";
-              sqlQuery += " Inner Join " + ShipStaticTableName + " As SS On SS.ShipStatID = tempSubTable.ShipPosID ";
-              sqlQuery += "Where tempSubTable.rowNumber = 1";
+                    	   FROM @tempShipPosition As Sp";
+            sqlQuery += @" Inner Join " + ShipStaticTableName + " As SS On SS.ShipStatID = Sp.ShipPosID ";
+            sqlQuery += @" ) As tempSubTable
+                           Where tempSubTable.rowNumber = 1 ";
 
             //MMSI
             if (!string.IsNullOrEmpty(filter.MMSI))
             {
                 sqlParam.Add("MMSI", filter.MMSI);
-                sqlQuery += " And tempSubTable.MMSI = @MMSI ";
+                sqlQuery += " And tempSubTable.SP_MMSI = @MMSI ";
             }
 
             //航行狀態      
             if(filter.NavStatusID > 0)
             {
                 sqlParam.Add("NavigationalStatus", filter.NavStatusID);
-                sqlQuery += " And (tempSubTable.NavigationalStatus = @SP_NavigationalStatus)";
+                sqlQuery += " And (tempSubTable.SP_NavigationalStatus = @SP_NavigationalStatus)";
             }
 
             //AIS型式
             if (filter.AisTypeID == 0)
             {
-                sqlQuery += " And tempSubTable.MessageId in (0) ";
+                sqlQuery += " And tempSubTable.SP_MessageId in (0) ";
             }else if(filter.AisTypeID == 1)
             {
-                sqlQuery += " And tempSubTable.MessageId in (1,2,3) ";
+                sqlQuery += " And tempSubTable.SP_MessageId in (1,2,3) ";
             }
             else if (filter.AisTypeID == 2)
             {
-                sqlQuery += " And tempSubTable.MessageId in (18,19) ";
+                sqlQuery += " And tempSubTable.SP_MessageId in (18,19) ";
             }
             else if (filter.AisTypeID == 3)
             {
-                sqlQuery += " And tempSubTable.MessageId in (21) ";
+                sqlQuery += " And tempSubTable.SP_MessageId in (21) ";
             }
             else if (filter.AisTypeID == 4 || filter.AisTypeID == 5)
             {
-                sqlQuery += " And tempSubTable.MessageId in (9) ";
+                sqlQuery += " And tempSubTable.SP_MessageId in (9) ";
             }
             else if (filter.AisTypeID == 6)
             {
-                sqlQuery += " And tempSubTable.MessageId in (4) ";
+                sqlQuery += " And tempSubTable.SP_MessageId in (4) ";
 
             }
 
@@ -291,8 +305,8 @@ namespace FA.COA.API.Models.Repository
             {
                 sqlParam.Add("MaxDataAge", filter.MaxDataAge);
                 sqlParam.Add("MinDataAge", filter.MinDataAge);
-                sqlQuery += " And DATEDIFF(MINUTE, tempSubTable.RecvTime, SYSDATETIME()) >= @MinDataAge ";
-                sqlQuery += " And DATEDIFF(MINUTE, tempSubTable.RecvTime, SYSDATETIME()) <= @MaxDataAge ";
+                sqlQuery += " And DATEDIFF(MINUTE, tempSubTable.SP_RecvTime, SYSDATETIME()) >= @MinDataAge ";
+                sqlQuery += " And DATEDIFF(MINUTE, tempSubTable.SP_RecvTime, SYSDATETIME()) <= @MaxDataAge ";
             }
 
             //最小對地速度Min SOG,最大對地速度Max SOG, Max SOG > 0 且min 不可大於Max
@@ -300,8 +314,8 @@ namespace FA.COA.API.Models.Repository
             {
                 sqlParam.Add("MaxSpeed", filter.MaxSpeed);
                 sqlParam.Add("MinSpeed", filter.MinSpeed);
-                sqlQuery += " And @MinSpeed <=  tempSubTable.SOG  ";
-                sqlQuery += " And tempSubTable.SOG <=  @MaxSpeed ";
+                sqlQuery += " And @MinSpeed <=  tempSubTable.SP_SOG  ";
+                sqlQuery += " And tempSubTable.SP_SOG <=  @MaxSpeed ";
             }
 
             //最小對地航向Min COG, 最大對地航向MaxCOG, Max COG > 0 且min 不可大於Max
@@ -309,43 +323,43 @@ namespace FA.COA.API.Models.Repository
             {
                 sqlParam.Add("MaxCourse", filter.MaxCourse);
                 sqlParam.Add("MinCourse", filter.MinCourse);
-                sqlQuery += " And @MinCourse <=  tempSubTable.COG ";
-                sqlQuery += " And tempSubTable.COG <=  @MaxCourse ";
+                sqlQuery += " And @MinCourse <=  tempSubTable.SP_COG ";
+                sqlQuery += " And tempSubTable.SP_COG <=  @MaxCourse ";
             }
 
             //資料來源 0為全選
             if (filter.DataSourceTypeID > 0)
             {
                 sqlParam.Add("DataSourceTypeID", filter.DataSourceTypeID);
-                sqlQuery += " And tempSubTable.DataSourceTypeID = @DataSourceTypeID ";
+                sqlQuery += " And tempSubTable.SP_DataSourceTypeID = @DataSourceTypeID ";
             }
 
             //IMO
             if (!string.IsNullOrEmpty(filter.IMO))
             {
                 sqlParam.Add("IMO", filter.IMO);
-                sqlQuery += " And SS.IMO = @SS_IMO ";
+                sqlQuery += " And tempSubTable.SS_IMO = @SS_IMO ";
             }
 
             //船名
             if (!string.IsNullOrEmpty(filter.ShipName))
             {
                 sqlParam.Add("ShipName", filter.ShipName);
-                sqlQuery += " And SS.Name = @ShipName ";
+                sqlQuery += " And tempSubTable.SS_Name = @ShipName ";
             }
 
             //呼號
             if (!string.IsNullOrEmpty(filter.CallSign))
             {
                 sqlParam.Add("CallSign", filter.CallSign);
-                sqlQuery += " And SS.CallSign = @CallSign ";
+                sqlQuery += " And tempSubTable.SS_CallSign = @CallSign ";
             }
 
             //船舶型式
             if (filter.ShipTypeID > 0)
             {
                 sqlParam.Add("ShipTypeID", filter.ShipTypeID);
-                sqlQuery += " And SS.ShipType = @ShipTypeID ";
+                sqlQuery += " And tempSubTable.SS_ShipType = @ShipTypeID ";
             }
 
             //最小船長MinLength.,最大船長MaxLength., 最大船長Max, MaxLength > 0 且min 不可大於Max
@@ -353,8 +367,8 @@ namespace FA.COA.API.Models.Repository
             {
                 sqlParam.Add("MaxLength", filter.MaxLength);
                 sqlParam.Add("MinLength", filter.MinLength);
-                sqlQuery += " And @MinLength <=  (SS.Dimension_A + SS.Dimension_B) ";
-                sqlQuery += " And (SS.Dimension_A + SS.Dimension_B) <=  @MaxLength ";
+                sqlQuery += " And @MinLength <=  (tempSubTable.SS_Dimension_A + tempSubTable.SS_Dimension_B) ";
+                sqlQuery += " And (tempSubTable.SS_Dimension_A + tempSubTable.SS_Dimension_B) <=  @MaxLength ";
             }
 
             #endregion
