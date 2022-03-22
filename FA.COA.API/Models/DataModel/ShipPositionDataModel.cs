@@ -59,6 +59,8 @@ namespace FA.COA.API.Models.DataModel
 
             public int SP_MMSI { get; set; }
 
+            public DateTime SP_LocalRecvTime { get; set; }
+
             public int SP_DataSourceTypeID { get; set; }
 
 
