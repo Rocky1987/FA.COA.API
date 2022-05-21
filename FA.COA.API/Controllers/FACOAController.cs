@@ -32,9 +32,34 @@ namespace FA.COA.API.Controllers
         {
             APIViewModel<List<EventsViewModel.Events_CT2MMSI_Zones>> resp = new APIViewModel<List<EventsViewModel.Events_CT2MMSI_Zones>>();
             try
-            {                
+            {
                 List<EventsViewModel.Events_CT2MMSI_Zones> viewData = this._eventsService.GetEventsData(model);
                 resp.Data = viewData;
+
+                //List<EventsViewModel.Events_CT2MMSI_Zones> testList = new List<EventsViewModel.Events_CT2MMSI_Zones>();
+                //EventsViewModel.Events_CT2MMSI_Zones a1 = new EventsViewModel.Events_CT2MMSI_Zones
+                //{
+                //    CTNumber = "1",
+                //    TimeStmp = new DateTime(1987, 10, 23),
+                //    ZoneName = "2",
+                //    ConditionID1 = 1,
+                //    MMSI = 123
+
+                //};
+
+                //EventsViewModel.Events_CT2MMSI_Zones a2 = new EventsViewModel.Events_CT2MMSI_Zones
+                //{
+                //    CTNumber = "2",
+                //    TimeStmp = new DateTime(1987, 10, 23),
+                //    ZoneName = "3",
+                //    ConditionID1 = 2,
+                //    MMSI = 456
+
+                //};
+                //testList.Add(a1);
+                //testList.Add(a2);
+
+                //resp.Data = testList;
                 resp.Status = 1;
             }
             catch (Exception ex)
@@ -45,6 +70,30 @@ namespace FA.COA.API.Controllers
             return HelplerService.getJsonStr(resp);
         }
 
+        // POST api/FACOA
+        /// <summary>
+        /// 取得CSV
+        /// </summary>
+        /// <param></param>
+        /// <returns>string Array</returns>
+        /// 
+        [HttpPost]
+        public HttpResponseMessage ExportCSVData([FromBody] List<EventsViewModel.Events_CT2MMSI_Zones> model)
+        {
+            APIViewModel<bool> resp = new APIViewModel<bool>();
+            try
+            {
+                resp.Data = this._eventsService.exportCSVData(model);
+                resp.Status = 1;
+            }
+            catch (Exception ex)
+            {
+                resp.ErrorMessage = ex.Message;
+                resp.Status = 0;
+            }
+
+            return HelplerService.getJsonStr(resp);
+        }
 
         /// <summary>
         /// 取得漁船數量
