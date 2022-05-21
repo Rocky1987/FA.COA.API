@@ -482,6 +482,14 @@
             <param name="documentPath">The physical path to XML document.</param>
         </member>
         <!-- Badly formed XML comment ignored for member "M:FA.COA.API.Controllers.FACOAController.GetEventsData(FA.COA.API.Models.DataModel.parameterDataModel.eventsQuery)" -->
+        <member name="M:FA.COA.API.Controllers.FACOAController.ExportCSVData(System.Collections.Generic.List{FA.COA.API.Models.ViewModel.EventsViewModel.Events_CT2MMSI_Zones})">
+            <summary>
+            取得CSV
+            </summary>
+            <param></param>
+            <returns>string Array</returns>
+            
+        </member>
         <member name="M:FA.COA.API.Controllers.FACOAController.GetShipCountData(FA.COA.API.Models.DataModel.parameterDataModel.bufferQuery)">
             <summary>
             取得漁船數量
