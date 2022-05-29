@@ -16,6 +16,7 @@ namespace FA.COA.API.Models.Repository
         public EventsRepository()
         {
             AlarmIDList = ConfigurationManager.AppSettings["AlarmIDList"];
+            //_connectStr = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(ConfigurationManager.ConnectionStrings["FACOASQLConnection"].ConnectionString));
             _connectStr = Encoding.UTF8.GetString(Convert.FromBase64String(ConfigurationManager.ConnectionStrings["FACOASQLConnection"].ConnectionString));           
         }
         public IEnumerable<EventsDataModel.Events_CT2MMSI_Zones> GetEventsData(parameterDataModel.eventsQuery model)
@@ -39,8 +40,8 @@ namespace FA.COA.API.Models.Repository
                         	 ,C2M.CTNumber
                         	 ,Z.ZoneName ";
             sqlQuery += " FROM " +ConfigurationManager.AppSettings["EventsTableName"]+ " As Ev ";
-            sqlQuery +=  " INNER Join " + ConfigurationManager.AppSettings["MMSITableName"] + " As C2M On C2M.Mmsi = EV.MMSI ";
-            sqlQuery += @" INNER Join " + ConfigurationManager.AppSettings["ZonesTableName"] + " As Z On Z.ZoneID = EV.ZoneID ";
+            sqlQuery +=  " LEFT Join " + ConfigurationManager.AppSettings["MMSITableName"] + " As C2M On C2M.Mmsi = EV.MMSI ";
+            sqlQuery += @" LEFT Join " + ConfigurationManager.AppSettings["ZonesTableName"] + " As Z On Z.ZoneID = EV.ZoneID ";
             sqlQuery += @" Where Ev.ConditionID1 in (1,2)";
             sqlQuery += "  And Ev.AlarmID in (" +AlarmIDList+ ") ";
             if (!string.IsNullOrEmpty(model.CTNumber))
