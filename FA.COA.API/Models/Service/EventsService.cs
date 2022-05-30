@@ -71,7 +71,7 @@ namespace FA.COA.API.Models.Service
                     {
                         string tempStr = "";
                         tempStr += i.ToString() + ",";
-                        tempStr += item.CTNumber != null ?  item.CTNumber.ToString() : string.Empty + ",";
+                        tempStr += item.CTNumber != null ?  item.CTNumber.ToString() + "," : string.Empty + ",";
                         tempStr += item.TimeStempDate + ",";
                         tempStr += item.TimeStempTime + ",";
                         tempStr += item.ZoneName + ",";
