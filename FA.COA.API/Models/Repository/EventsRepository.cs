@@ -49,7 +49,7 @@ namespace FA.COA.API.Models.Repository
                 if (model.SearchType == 1)
                 {
                     sqlParam.Add("CTNumber", model.CTNumber);
-                    sqlQuery += "  And C2M.CTNumber = @CTNumber ";
+                    sqlQuery += "  And C2M.MMSI = @CTNumber ";
                 }
                 else if(model.SearchType == 2)
                 {
